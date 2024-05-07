@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 
 const App = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     try {
       const response = await fetch('https://dummyjson.com/products');
       const result = await response.json();
       setProducts(result.products);
-      console.log(result.products)
+      setLoading(false); // Set loading to false after fetching data
     } catch (error) {
       console.error('Error fetching data:', error);
+      setLoading(false); // Set loading to false if there's an error
     }
   };
 
@@ -21,14 +23,18 @@ const App = () => {
   return (
     <div>
       <h1>Product Titles</h1>
-      <ul>
-        {products.map(product => (
-          <div>
-            <li key={product.id}>{product.title}</li>
-            <img src={product.images[0]} alt="" />
-          </div>
-        ))}
-      </ul>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <ul>
+          {products.map(product => (
+            <div key={product.id} >
+              <li key={product.id}>{product.title}</li>
+              <img src={product.images[0]} alt="" />
+            </div>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
